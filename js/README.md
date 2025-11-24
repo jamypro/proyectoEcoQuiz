@@ -1,5 +1,7 @@
 # EcoQuiz 🌍
 
+pagina web: https://jamypro.github.io/proyectoEcoQuiz/
+
 EcoQuiz es una aplicación web interactiva de preguntas y respuestas diseñada para educar y sensibilizar sobre temas medioambientales como el reciclaje, el cambio climático, las energías renovables y la sostenibilidad. Permite partidas de uno o varios jugadores con diferentes modos y niveles de dificultad.
 
 ## 🚀 Flujo de la Aplicación
