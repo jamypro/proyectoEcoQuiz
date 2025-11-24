@@ -277,10 +277,11 @@ class ManejadorPreguntas {
         return [...preguntas].sort(() => Math.random() - 0.5);
     }
 
-    obtenerPreguntasParaJugador(dificultad, numPreguntas) {
+    obtenerPreguntasParaJugador(dificultad, numPreguntas, idsExcluidos = []) {
         // Selección equilibrada por origen con fallback de dificultad
         const origenes = Object.keys(this.preguntasPorOrigen || {});
         if (origenes.length === 0) return [];
+        const idsExcluidosSet = new Set(idsExcluidos);
 
         // Prioridad de dificultades según nivel solicitado
         const prioridadDificultades = (nivel) => {
@@ -321,7 +322,10 @@ class ManejadorPreguntas {
             for (const nivelPrioritario of prioridades) {
                 if (need <= 0) break;
                 const candidatos = disponible.filter(
-                    (q) => q.dificultad === nivelPrioritario && !usadas.has(q)
+                    (q) =>
+                        q.dificultad === nivelPrioritario &&
+                        !idsExcluidosSet.has(q.id) &&
+                        !usadas.has(q)
                 );
                 const mezclados = this.mezclarPreguntas(candidatos);
                 for (let i = 0; i < mezclados.length && need > 0; i++, need--) {
@@ -332,7 +336,9 @@ class ManejadorPreguntas {
 
             // Si aún falta cubrir la cuota, tomar de cualquier dificultad disponible en ese origen
             if (need > 0) {
-                const resto = disponible.filter((q) => !usadas.has(q));
+                const resto = disponible.filter(
+                    (q) => !idsExcluidosSet.has(q.id) && !usadas.has(q)
+                );
                 const mezclados = this.mezclarPreguntas(resto);
                 for (let i = 0; i < mezclados.length && need > 0; i++, need--) {
                     seleccionadas.push(mezclados[i]);
@@ -344,11 +350,9 @@ class ManejadorPreguntas {
         // Si por alguna razón no se alcanzó el número pedido (pocos datos), rellenar desde todo el pool
         if (seleccionadas.length < numPreguntas) {
             const faltan = numPreguntas - seleccionadas.length;
-            const yaIds = new Set(
-                seleccionadas.map((q) => q.origen + "::" + q.id)
-            );
+            const yaIds = new Set(seleccionadas.map((q) => q.id));
             const pool = this.mezclarPreguntas(this.preguntas).filter(
-                (q) => !yaIds.has(q.origen + "::" + q.id)
+                (q) => !yaIds.has(q.id) && !idsExcluidosSet.has(q.id)
             );
             seleccionadas.push(...pool.slice(0, faltan));
         }

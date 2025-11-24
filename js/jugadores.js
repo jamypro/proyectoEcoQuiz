@@ -12,6 +12,7 @@ class ManejadorJugadores {
             fallos: 0,
             preguntas: [],
             respuestas: [],
+            preguntasRespondidas: 0, // Nuevo: contador por jugador
         });
     }
 

@@ -89,20 +89,28 @@ class Juego {
 
         console.log("Preguntas disponibles:", preguntasDisponibles);
 
+        let preguntasYaAsignadasIds = [];
+
         this.manejadorJugadores.jugadores.forEach((jugador, index) => {
             const preguntasJugador =
                 this.manejadorPreguntas.obtenerPreguntasParaJugador(
                     this.configuracion.dificultad,
-                    this.configuracion.numPreguntas
+                    this.configuracion.numPreguntas,
+                    preguntasYaAsignadasIds // Pasamos los IDs a excluir
                 );
 
             if (!preguntasJugador || preguntasJugador.length === 0) {
                 console.error(
                     "No se pudieron asignar preguntas al jugador:",
-                    jugador.nombre
+                    jugador.nombre,
+                    "Puede que no haya suficientes preguntas únicas para la configuración seleccionada."
                 );
                 return false;
             }
+
+            // Acumulamos los nuevos IDs para la siguiente iteración
+            const nuevosIds = preguntasJugador.map((p) => p.id);
+            preguntasYaAsignadasIds.push(...nuevosIds);
 
             this.manejadorJugadores.asignarPreguntasAJugador(
                 index,
@@ -137,11 +145,21 @@ class Juego {
 
     mostrarSiguientePregunta() {
         const jugadorActual = this.manejadorJugadores.obtenerJugadorActual();
-        const preguntaIndex = Math.floor(
-            this.preguntasRespondidas / this.manejadorJugadores.jugadores.length
-        );
+        let preguntaIndex;
 
-        if (preguntaIndex >= this.configuracion.numPreguntas) {
+        if (this.configuracion.modoJuego === CONFIG.MODOS_JUEGO.INTERCALADO) {
+            // Lógica para modo Intercalado (la que ya existía)
+            preguntaIndex = Math.floor(
+                this.preguntasRespondidas /
+                    this.manejadorJugadores.jugadores.length
+            );
+        } else {
+            // Lógica para modo Turneado
+            preguntaIndex = jugadorActual.preguntasRespondidas;
+        }
+
+        // Comprobación de fin de juego
+        if (this.preguntasRespondidas >= this.totalPreguntas) {
             this.finalizarJuego();
             return;
         }
@@ -184,6 +202,9 @@ class Juego {
             indiceRespuesta
         );
 
+        // Incrementar el contador de preguntas respondidas del jugador actual
+        jugadorActual.preguntasRespondidas++;
+
         // Registrar respuesta
         this.manejadorJugadores.registrarRespuesta(
             this.manejadorJugadores.jugadorActual,
@@ -198,9 +219,11 @@ class Juego {
         this.preguntasRespondidas++;
 
         // Determinar siguiente acción según modo de juego
-        if (
-            this.configuracion.modoJuego === CONFIG.MODOS_JUEGO.INTERCALADO ||
-            this.preguntasRespondidas % this.configuracion.numPreguntas === 0
+        if (this.configuracion.modoJuego === CONFIG.MODOS_JUEGO.INTERCALADO) {
+            this.manejadorJugadores.siguienteJugador();
+        } else if (
+            jugadorActual.preguntasRespondidas >=
+            this.configuracion.numPreguntas
         ) {
             this.manejadorJugadores.siguienteJugador();
         }
