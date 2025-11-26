@@ -40,12 +40,14 @@ class Juego {
             .addEventListener("click", () => {
                 this.volverAlInicio();
             });
-    window.addEventListener("verRespuestas", () => {
+        window.addEventListener("verRespuestas", () => {
             this.interfaz.mostrarModalRespuestas(
                 this.manejadorJugadores.jugadores
             );
         });
     }
+
+    async iniciarJuego() {
         // Cargar preguntas
         const cargaExitosa = await this.manejadorPreguntas.cargarPreguntas();
         if (!cargaExitosa) {
