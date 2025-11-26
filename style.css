@@ -315,16 +315,84 @@ body {
     transform: rotate(8deg);
 }
 
-@media (max-width: 768px) {
-    .opcion-respuesta {
-        font-size: 0.95rem;
-        padding: 10px;
-    }
-    .card::after {
-        display: none;
-    }
-    .decor-nube,
-    .decor-sol {
-        display: none !important;
-    }
+/* Estilos para el modal de respuestas */
+.modal-respuestas .modal-content {
+    background: linear-gradient(120deg, #f0fff0, #e6f7ff);
+    border-radius: 15px;
+}
+
+.modal-respuestas .modal-header {
+    border-bottom: none;
+    color: #0f3b2e;
+}
+
+.modal-respuestas .pregunta-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-left: 5px solid #28a745;
+}
+
+.modal-respuestas .pregunta-item.fallada {
+    border-left-color: #dc3545;
+}
+
+.modal-respuestas .pregunta-texto {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.modal-respuestas .respuesta-correcta {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.modal-respuestas .respuesta-usuario {
+    font-weight: bold;
+}
+
+.modal-respuestas .respuesta-usuario.acertada {
+    color: #28a745;
+}
+
+.modal-respuestas .respuesta-usuario.fallada {
+    color: #dc3545;
+}
+
+.modal-respuestas .resultado-icono {
+    font-size: 1.2rem;
+    margin-right: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Estilos para las pestañas de jugadores en el modal */
+#respuestas-tabs {
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(42, 157, 90, 0.2);
+}
+
+#respuestas-tabs .nav-item .nav-link {
+    border: none;
+    background-color: transparent;
+    color: #0f3b2e;
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+#respuestas-tabs .nav-item .nav-link.active {
+    color: var(--verde-oscuro);
+    border-bottom: 2px solid var(--verde-oscuro);
+    background-color: rgba(42, 157, 90, 0.1);
+}
+
+#respuestas-tabs .nav-item .nav-link:hover {
+    color: var(--verde-oscuro);
+    background-color: rgba(42, 157, 90, 0.05);
+}
+
+#respuestas-tabs-content {
+    padding-top: 1rem;
 }

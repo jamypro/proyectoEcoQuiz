@@ -25,14 +25,19 @@ class ManejadorJugadores {
         return this.obtenerJugadorActual();
     }
 
-    registrarRespuesta(jugadorIndex, preguntaId, esCorrecta) {
+    registrarRespuesta(
+        jugadorIndex,
+        pregunta,
+        esCorrecta,
+        respuestaUsuario
+    ) {
         const jugador = this.jugadores[jugadorIndex];
         if (esCorrecta) {
             jugador.aciertos++;
         } else {
             jugador.fallos++;
         }
-        jugador.respuestas.push({ preguntaId, esCorrecta });
+        jugador.respuestas.push({ pregunta, esCorrecta, respuestaUsuario });
     }
 
     asignarPreguntasAJugador(jugadorIndex, preguntas) {
@@ -41,12 +46,18 @@ class ManejadorJugadores {
 
     obtenerResultados() {
         return this.jugadores
-            .map((jugador) => ({
-                nombre: jugador.nombre,
-                aciertos: jugador.aciertos,
-                fallos: jugador.fallos,
-                puntaje: jugador.aciertos * 100,
-            }))
+            .map((jugador) => {
+                const aciertos = jugador.respuestas.filter(
+                    (r) => r.esCorrecta
+                ).length;
+                const fallos = jugador.respuestas.length - aciertos;
+                return {
+                    nombre: jugador.nombre,
+                    aciertos,
+                    fallos,
+                    puntaje: aciertos * 100,
+                };
+            })
             .sort((a, b) => b.puntaje - a.puntaje);
     }
 

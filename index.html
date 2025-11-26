@@ -199,6 +199,12 @@
                             ></div>
                             <div class="d-grid gap-2">
                                 <button
+                                    id="ver-respuestas"
+                                    class="btn btn-success"
+                                >
+                                    Ver respuestas
+                                </button>
+                                <button
                                     id="jugar-nuevo"
                                     class="btn btn-success"
                                 >
@@ -212,6 +218,36 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Respuestas -->
+        <div
+            class="modal fade"
+            id="modal-respuestas"
+            tabindex="-1"
+            aria-labelledby="modalRespuestasLabel"
+            aria-hidden="true"
+        >
+            <div
+                class="modal-dialog modal-lg modal-dialog-scrollable modal-respuestas"
+            >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalRespuestasLabel">
+                            Revisión de Respuestas
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body" id="contenido-modal-respuestas">
+                        <!-- El contenido se generará dinámicamente -->
                     </div>
                 </div>
             </div>

@@ -371,7 +371,7 @@ class ManejadorPreguntas {
                 return acc;
             }, {})
         );
-
+        console.log(seleccionadas);
         return seleccionadas;
     }
 

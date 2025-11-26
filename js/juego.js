@@ -40,9 +40,12 @@ class Juego {
             .addEventListener("click", () => {
                 this.volverAlInicio();
             });
+    window.addEventListener("verRespuestas", () => {
+            this.interfaz.mostrarModalRespuestas(
+                this.manejadorJugadores.jugadores
+            );
+        });
     }
-
-    async iniciarJuego() {
         // Cargar preguntas
         const cargaExitosa = await this.manejadorPreguntas.cargarPreguntas();
         if (!cargaExitosa) {
@@ -208,8 +211,9 @@ class Juego {
         // Registrar respuesta
         this.manejadorJugadores.registrarRespuesta(
             this.manejadorJugadores.jugadorActual,
-            this.preguntaActual.id,
-            esCorrecta
+            this.preguntaActual,
+            esCorrecta,
+            this.preguntaActual.opciones[indiceRespuesta]
         );
 
         // Reproducir sonido según resultado

@@ -30,6 +30,7 @@ class InterfazUI {
         this.tablaResultados = document.getElementById("tabla-resultados");
         this.recomendaciones = document.getElementById("recomendaciones");
         this.btnJugarNuevo = document.getElementById("jugar-nuevo");
+        this.btnVerRespuestas = document.getElementById("ver-respuestas");
         this.btnVolverInicio = document.getElementById("volver-inicio");
 
         this.inicializarEventos();
@@ -39,6 +40,9 @@ class InterfazUI {
         this.selectNumJugadores.addEventListener("change", () =>
             this.actualizarCamposJugadores()
         );
+        this.btnVerRespuestas.addEventListener("click", () => {
+            this.dispatchEvent("verRespuestas");
+        });
         this.formConfiguracion.addEventListener("submit", (e) => {
             e.preventDefault();
             const config = this.obtenerConfiguracion();
@@ -143,6 +147,8 @@ class InterfazUI {
         this.barraProgreso.style.width = `${porcentaje}%`;
     }
 
+    mostrarPreguntascorrectas() {}
+
     mostrarResultados(resultados) {
         // Crear podio
         this.podio.innerHTML = this.crearPodioHTML(resultados.slice(0, 3));
@@ -208,6 +214,92 @@ class InterfazUI {
 
             setTimeout(() => confeti.remove(), 4000);
         }
+    }
+
+    mostrarModalRespuestas(jugadores) {
+        const contenidoModal = document.getElementById(
+            "contenido-modal-respuestas"
+        );
+        contenidoModal.innerHTML = ""; // Limpiar contenido anterior
+
+        if (jugadores.length > 1) {
+            // Crear pestañas para varios jugadores
+            const nav = document.createElement("ul");
+            nav.className = "nav nav-tabs";
+            nav.id = "respuestas-tabs";
+            nav.role = "tablist";
+
+            const tabContent = document.createElement("div");
+            tabContent.className = "tab-content";
+            tabContent.id = "respuestas-tabs-content";
+
+            jugadores.forEach((jugador, index) => {
+                // Crear botón de la pestaña
+                const navItem = document.createElement("li");
+                navItem.className = "nav-item";
+                navItem.role = "presentation";
+                const button = document.createElement("button");
+                button.className = `nav-link ${index === 0 ? "active" : ""}`;
+                button.id = `jugador-${index}-tab`;
+                button.dataset.bsToggle = "tab";
+                button.dataset.bsTarget = `#jugador-${index}-content`;
+                button.type = "button";
+                button.role = "tab";
+                button.textContent = jugador.nombre;
+                navItem.appendChild(button);
+                nav.appendChild(navItem);
+
+                // Crear contenido de la pestaña
+                const contentDiv = document.createElement("div");
+                contentDiv.className = `tab-pane fade ${
+                    index === 0 ? "show active" : ""
+                }`;
+                contentDiv.id = `jugador-${index}-content`;
+                contentDiv.role = "tabpanel";
+                contentDiv.innerHTML = this.generarHtmlRespuestas(jugador);
+                tabContent.appendChild(contentDiv);
+            });
+
+            contenidoModal.appendChild(nav);
+            contenidoModal.appendChild(tabContent);
+        } else {
+            // Mostrar directamente para un solo jugador
+            contenidoModal.innerHTML = this.generarHtmlRespuestas(
+                jugadores[0]
+            );
+        }
+
+        const modal = new bootstrap.Modal(
+            document.getElementById("modal-respuestas")
+        );
+        modal.show();
+    }
+
+    generarHtmlRespuestas(jugador) {
+        if (!jugador || !jugador.respuestas) return "";
+
+        return jugador.respuestas
+            .map((respuesta) => {
+                const pregunta = respuesta.pregunta;
+                const esAcertada = respuesta.esCorrecta;
+                const icono = esAcertada
+                    ? '<span class="resultado-icono">✅</span>'
+                    : '<span class="resultado-icono">❌</span>';
+                const claseItem = esAcertada ? "acertada" : "fallada";
+
+                return `
+                <div class="pregunta-item ${claseItem}">
+                    <p class="pregunta-texto">${icono} ${pregunta.texto}</p>
+                    <p><strong>Respuesta correcta:</strong> <span class="respuesta-correcta">${
+                        pregunta.opciones[pregunta.respuestaCorrecta]
+                    }</span></p>
+                    <p><strong>Tu respuesta:</strong> <span class="respuesta-usuario ${claseItem}">${
+                    respuesta.respuestaUsuario
+                }</span></p>
+                </div>
+            `;
+            })
+            .join("");
     }
 
     dispatchEvent(eventName, detail) {
