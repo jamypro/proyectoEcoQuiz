@@ -5,6 +5,7 @@ class ManejadorPreguntas {
     constructor() {
         this.preguntas = [];
         this.preguntaActual = 0;
+        this.preguntasSeleccionadas = [];
     }
 
     limpiarTexto(texto) {
@@ -26,10 +27,7 @@ class ManejadorPreguntas {
 
                     // Procesar la estructura específica del JSON
                     const preguntas = [];
-                    console.log(
-                        `Datos cargados del archivo ${nombreArchivo}:`,
-                        data
-                    );
+
                     if (data.temas && Array.isArray(data.temas)) {
                         data.temas.forEach((tema) => {
                             if (tema.niveles && Array.isArray(tema.niveles)) {
@@ -233,8 +231,6 @@ class ManejadorPreguntas {
                     "No se encontraron preguntas en los archivos JSON"
                 );
             }
-
-            console.log("Preguntas cargadas:", this.preguntas);
             return true;
         } catch (error) {
             console.error("Error al cargar las preguntas:", error);
@@ -371,12 +367,16 @@ class ManejadorPreguntas {
                 return acc;
             }, {})
         );
-        console.log(seleccionadas);
+        this.preguntasSeleccionadas = seleccionadas;
         return seleccionadas;
     }
 
     verificarRespuesta(preguntaId, respuestaSeleccionada) {
-        const pregunta = this.preguntas.find((p) => p.id === preguntaId);
+        // Busca la pregunta en el conjunto de preguntas seleccionadas para la sesión actual
+        const pregunta = this.preguntasSeleccionadas.find(
+            (p) => p.id === preguntaId
+        );
+
         return pregunta && pregunta.respuestaCorrecta === respuestaSeleccionada;
     }
 }

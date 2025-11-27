@@ -92,8 +92,6 @@ class Juego {
             return false;
         }
 
-        console.log("Preguntas disponibles:", preguntasDisponibles);
-
         let preguntasYaAsignadasIds = [];
 
         this.manejadorJugadores.jugadores.forEach((jugador, index) => {
@@ -189,8 +187,6 @@ class Juego {
             return;
         }
 
-        console.log("Mostrando pregunta:", this.preguntaActual);
-
         this.interfaz.mostrarPregunta(
             this.preguntaActual,
             jugadorActual.nombre
@@ -219,7 +215,7 @@ class Juego {
         );
 
         // Reproducir sonido según resultado
-        this.reproducirSonido(esCorrecta ? "ACIERTO" : "ERROR");
+        //this.reproducirSonido(esCorrecta ? "ACIERTO" : "ERROR");
 
         // Actualizar contadores
         this.preguntasRespondidas++;
