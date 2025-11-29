@@ -163,6 +163,7 @@ class InterfazUI {
                 <td>${jugador.aciertos}</td>
                 <td>${jugador.fallos}</td>
                 <td>${jugador.puntaje}</td>
+                <td>${jugador.nota}</td>
             </tr>
         `
             )
@@ -264,9 +265,7 @@ class InterfazUI {
             contenidoModal.appendChild(tabContent);
         } else {
             // Mostrar directamente para un solo jugador
-            contenidoModal.innerHTML = this.generarHtmlRespuestas(
-                jugadores[0]
-            );
+            contenidoModal.innerHTML = this.generarHtmlRespuestas(jugadores[0]);
         }
 
         const modal = new bootstrap.Modal(
